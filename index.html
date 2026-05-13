@@ -199,6 +199,34 @@
     }
 
     function verificarAcceso() {
+        async function verificarAcceso() {
+    const pass = document.getElementById('accessPassword').value;
+    
+    if (pass === CLAVE_NOVIA) {
+        salaActual = "chat_novia";
+        document.getElementById('roomLabel').innerText = "ENLACE_CIFRADO: [PRIVADO_NOVIA]";
+    } else if (pass === CLAVE_AMIGOS) {
+        salaActual = "chat_amigos";
+        document.getElementById('roomLabel').innerText = "ENLACE_CIFRADO: [RED_AMIGOS]";
+    } else if (pass === CLAVE_FAMILIA) {
+        salaActual = "chat_familia";
+        document.getElementById('roomLabel').innerText = "ENLACE_CIFRADO: [SISTEMA_FAMILIA]";
+    } else {
+        alert("ACCESO DENEGADO.");
+        document.getElementById('accessPassword').value = '';
+        return;
+    }
+
+    // 🚀 AÑADE ESTA LÍNEA AQUÍ PARA INICIAR SESIÓN ANÓNIMA EN TU PROYECTO
+    await supabaseClient.auth.signInAnonymously();
+
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('chatScreen').style.display = 'flex';
+    
+    cargarMensajes();
+    escucharMensajesEnTiempoReal();
+}
+
         const pass = document.getElementById('accessPassword').value;
         
         if (pass === CLAVE_NOVIA) {
