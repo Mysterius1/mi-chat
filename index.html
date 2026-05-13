@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terminal Console</title>
-    <!-- Enlace oficial completo para activar Supabase desde internet -->
-    <script src="jsdelivr.net"></script>
+    <!-- ENLACE DE CONEXION REPARADO: Carga la libreria oficial completa de Supabase sin fallas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { box-sizing: border-box; font-family: 'Consolas', 'Courier New', monospace; }
         body { background-color: #0a0a0a; color: #00ff66; margin: 0; padding: 20px; height: 100vh; display: flex; justify-content: center; align-items: center; }
@@ -147,8 +147,9 @@
     <h2>Creador: Պ¥ՏԵӗԄұՄ§ OFC</h2>
     <p>Introduce tu clave de acceso para abrir el canal de comunicacion:</p>
     <div class="password-container">
+        <!-- MARCADOR FIJO EN PASSWORD SIN CARACTERES EXTRAÑOS -->
         <input type="password" id="accessPassword" placeholder="Password..." style="color: #00ff66 !important; background: #000000 !important;" onkeypress="if(event.key === 'Enter') verificarAcceso()">
-        <button type="button" class="toggle-password" onclick="alternarContraseña()">👁</button>
+        <button type="button" class="toggle-password" onclick="alternarContrasena()">👁</button>
     </div>
     <button class="btn-access" onclick="verificarAcceso()">CONECTAR</button>
 </div>
@@ -170,7 +171,7 @@
 </div>
 
 <script>
-    // 1. TU CONFIGURACION REAL FIJA DE CONEXION CON SUPABASE
+    // 1. TU CONFIGURACION REAL FIJA DE CONEXION CON SUPABASE (YA CORREGIDA)
     const SUPABASE_URL = "https://utgufzjgvwsyvuxbdebs.supabase.co";
     const SUPABASE_KEY = "sb_publishable_b0lTlpw35XWvlzW2tDg4Lw__YtTL41d";
     
@@ -186,7 +187,8 @@
     
     let salaActual = ""; 
 
-    function alternarContraseña() {
+    // Correccion de funcion: Nombre sin caracteres especiales (tildes) para evitar errores del navegador
+    function alternarContrasena() {
         const passwordInput = document.getElementById('accessPassword');
         const toggleButton = document.querySelector('.toggle-password');
         if (passwordInput.type === 'password') {
