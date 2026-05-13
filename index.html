@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consola de Terminal</title>
+    <title>Terminal Console</title>
     <!-- Enlace oficial completo para activar Supabase desde internet -->
     <script src="jsdelivr.net"></script>
     <style>
@@ -145,18 +145,18 @@
 <!-- PANTALLA DE LOG IN -->
 <div class="login-box" id="loginScreen">
     <h2>Creador: Պ¥ՏԵӗԄұՄ§ OFC</h2>
-    <p>Introduce tu clave de acceso para abrir el canal de comunicación:</p>
+    <p>Introduce tu clave de acceso para abrir el canal de comunicacion:</p>
     <div class="password-container">
-        <input type="password" id="accessPassword" placeholder="Contraseña..." style="color: #00ff66 !important; background: #000000 !important;" onkeypress="if(event.key === 'Enter') verificarAcceso()">
+        <input type="password" id="accessPassword" placeholder="Password..." style="color: #00ff66 !important; background: #000000 !important;" onkeypress="if(event.key === 'Enter') verificarAcceso()">
         <button type="button" class="toggle-password" onclick="alternarContraseña()">👁</button>
     </div>
-    <button class="btn-access" onclick="verificarAcceso()">ACCEDER</button>
+    <button class="btn-access" onclick="verificarAcceso()">CONECTAR</button>
 </div>
 
 <!-- VENTANA DEL CHAT -->
 <div class="chat-window" id="chatScreen">
     <div class="top-bar">
-        <div>Sesión: <input type="text" id="username" value="usuario" maxlength="12"></div>
+        <div>Sesion: <input type="text" id="username" value="user" maxlength="12"></div>
         <div id="roomLabel" class="room-title">ESTADO: INACTIVO</div>
     </div>
     
@@ -170,11 +170,11 @@
 </div>
 
 <script>
-    // 1. CONFIGURACIÓN COMPLETA Y REAL DE CONEXIÓN CON SUPABASE
-    const SUPABASE_URL = "supabase.co";
+    // 1. TU CONFIGURACION REAL FIJA DE CONEXION CON SUPABASE
+    const SUPABASE_URL = "https://utgufzjgvwsyvuxbdebs.supabase.co";
     const SUPABASE_KEY = "sb_publishable_b0lTlpw35XWvlzW2tDg4Lw__YtTL41d";
     
-    // 2. CONFIGURACIÓN DE LAS CONTRASENIAS PRIVADAS
+    // 2. CONFIGURACION DE LAS CONTRASENIAS PRIVADAS
     const CLAVE_NOVIA = "miamor123";
     const CLAVE_AMIGOS = "amigos123";
     const CLAVE_FAMILIA = "familia123";
@@ -235,7 +235,7 @@
         messagesBox.innerHTML = ''; 
         data.forEach(msg => {
             const div = document.createElement('div');
-            const miNombre = usernameInput.value.trim() || "usuario";
+            const miNombre = usernameInput.value.trim() || "user";
             
             div.className = msg.remitente === miNombre ? "line me" : "line other";
             
@@ -249,7 +249,7 @@
     }
 
     async function enviarMensaje() {
-        const remitente = usernameInput.value.trim() || "usuario";
+        const remitente = usernameInput.value.trim() || "user";
         const contenido = messageInput.value.trim();
         if (contenido === '') return;
 
