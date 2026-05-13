@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Console</title>
+    <!-- Enlace oficial y correcto para cargar Supabase en la página web -->
+    <script src="jsdelivr.net"></script>
+    <style>
+        * { box-sizing: border-box; font-family: 'Consolas', 'Courier New', monospace; }
+        body { background-color: #0a0a0a; color: #00ff66; margin: 0; padding: 20px; height: 100vh; display: flex; justify-content: center; align-items: center; }
+
+        /* PANTALLA DE LOG IN CRUDA */
+        .login-box { 
+            border: 1px solid #00ff66; 
+            padding: 30px; 
+            background: #111;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.1);
+        }
+        .login-box h2 { color: #00ff66; font-size: 18px; margin: 0 0 15px 0; font-weight: normal; letter-spacing: 1px; }
+        .login-box p { font-size: 13px; color: #777; margin-bottom: 20px; line-height: 1.4; }
+        
+        /* CONTENEDOR NUEVO PARA EL INPUT Y EL OJITO */
+        .password-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+        .login-box input { 
+            width: 100%; 
+            background: #000 !important; 
+            border: 1px solid #333; 
+            color: #00ff66 !important; 
+            padding: 10px; 
+            padding-right: 40px; /* Espacio para que el texto no se tape con el ojo */
+            outline: none;
+            font-size: 14px;
+        }
+        .login-box input:focus { border-color: #00ff66; }
+        
+        /* ESTILO DEL BOTÓN DEL OJITO */
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            background: transparent;
+            border: none;
+            color: #00ff66;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            outline: none;
+        }
+        .toggle-password:hover {
+            color: #fff;
+        }
+
+        .login-box .btn-access { 
+            margin-top: 15px;
+            width: 100%;
+            background: #00ff66;
+            color: #000;
+            border: none;
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .login-box .btn-access:hover { background: #00cc52; }
+
+        /* VENTANA DEL CHAT TERMINAL */
+        .chat-window { 
+            display: none; 
+            width: 100%; 
+            max-width: 900px; 
+            height: 90vh; 
+            border: 1px solid #222; 
+            background: #000;
+            flex-direction: column;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.7);
+        }
+        .top-bar { 
+            background: #111; 
+            padding: 10px 20px; 
+            border-bottom: 1px solid #222;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            align-items: center;
+        }
+        .top-bar input {
+            background: #000;
+            border: 1px solid #222;
+            color: #00ff66;
+            padding: 4px 8px;
+            width: 120px;
+            outline: none;
+        }
+        .top-bar input:focus { border-color: #00ff66; }
+        .room-title { color: #00ff66; font-weight: bold; font-size: 12px; }
+
+        /* PANTALLA DE TEXTO */
+        .log-screen { 
+            flex-grow: 1; 
+            padding: 20px; 
+            overflow-y: auto; 
+            font-size: 14px;
+            background: #050505;
+        }
+        .line { margin-bottom: 8px; line-height: 1.4; word-break: break-all; }
+        .line.me { color: #fff; } 
+        .line.other { color: #00ff66; } 
+        .timestamp { color: #444; margin-right: 8px; }
+        .user-tag { color: #888; font-weight: normal; margin-right: 6px; }
+
+        /* ENTRADA DE COMANDOS INFERIOR */
+        .bottom-bar { 
+            display: flex; 
+            padding: 12px 20px; 
+            background: #111; 
+            border-top: 1px solid #222;
+            align-items: center;
+        }
+        .prompt { color: #00ff66; margin-right: 10px; font-weight: bold; font-size: 15px; }
+        .bottom-bar input { 
+            flex-grow: 1; 
+            background: transparent; 
+            border: none; 
+            color: #fff; 
+            font-size: 14px;
+            outline: none;
+        }
+        .bottom-bar button {
+            background: #000;
+            border: 1px solid #222;
+            color: #00ff66;
+            padding: 6px 18px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .bottom-bar button:hover { background: #111; border-color: #00ff66; }
+    </style>
+</head>
+<body>
+
+<!-- PANTALLA DE LOG IN -->
+<div class="login-box" id="loginScreen">
+    <h2>Creador: Պ¥ՏԵӗԄұՄ§ OFC</h2>
+    <p>Introduce tu clave de acceso para abrir el canal de comunicación:</p>
+    <div class="password-container">
+        <input type="password" id="accessPassword" placeholder="Password..." style="color: #00ff66 !important; background: #000000 !important;" onkeypress="if(event.key === 'Enter') verificarAcceso()">
+        <!-- Botón del ojo interactivo -->
+        <button type="button" class="toggle-password" onclick="alternarContraseña()">👁</button>
+    </div>
+    <button class="btn-access" onclick="verificarAcceso()">ACCEDER</button>
+</div>
+
+<!-- VENTANA DEL CHAT -->
+<div class="chat-window" id="chatScreen">
+    <div class="top-bar">
+        <div>Session: <input type="text" id="username" value="user" maxlength="12"></div>
+        <div id="roomLabel" class="room-title">STATUS: IDLE</div>
+    </div>
+    
+    <div class="log-screen" id="messagesBox"></div>
+    
+    <div class="bottom-bar">
+        <span class="prompt">$&gt;</span>
+        <input type="text" id="messageInput" placeholder="Escribe un mensaje..." autocomplete="off" onkeypress="if(event.key === 'Enter') enviarMensaje()">
+        <button onclick="enviarMensaje()">SEND</button>
+    </div>
+</div>
+
+<script>
+    // 1. CONFIGURACIÓN DE CONEXIÓN CON TU SUPABASE
+    const SUPABASE_URL = "supabase.co";
+    const SUPABASE_KEY = "sb_publishable_b0lTlpw35XWvlzW2tDg4Lw__YtTL41d";
+    
+    // 2. CONFIGURACIÓN DE LAS CONTRASENIAS PRIVADAS
+    const CLAVE_NOVIA = "miamor123";
+    const CLAVE_AMIGOS = "amigos123";
+    const CLAVE_FAMILIA = "familia123";
+    
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const messagesBox = document.getElementById('messagesBox');
+    const messageInput = document.getElementById('messageInput');
+    const usernameInput = document.getElementById('username');
+    
+    let salaActual = ""; 
+
+    // Función para mostrar u ocultar el texto de la contraseña
+    function alternarContraseña() {
+        const passwordInput = document.getElementById('accessPassword');
+        const toggleButton = document.querySelector('.toggle-password');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleButton.innerText = '❌'; // Icono cuando se está mostrando la clave
+        } else {
+            passwordInput.type = 'password';
+            toggleButton.innerText = '👁'; // Icono cuando está oculta
+        }
+    }
+
+    function verificarAcceso() {
+        const pass = document.getElementById('accessPassword').value;
+        
+        if (pass === CLAVE_NOVIA) {
+            salaActual = "chat_novia";
+            document.getElementById('roomLabel').innerText = "ENC_LINK: [PRIVADO_NOVIA]";
+        } else if (pass === CLAVE_AMIGOS) {
+            salaActual = "chat_amigos";
+            document.getElementById('roomLabel').innerText = "ENC_LINK: [NET_AMIGOS]";
+        } else if (pass === CLAVE_FAMILIA) {
+            salaActual = "chat_familia";
+            document.getElementById('roomLabel').innerText = "ENC_LINK: [SYS_FAMILIA]";
+        } else {
+            alert("ACCESS DENIED.");
+            document.getElementById('accessPassword').value = '';
+            return;
+        }
+
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('chatScreen').style.display = 'flex';
+        
+        cargarMensajes();
+        setInterval(cargarMensajes, 4000);
+    }
+
+    async function cargarMensajes() {
+        const { data, error } = await supabaseClient
+            .from('mensajes')
+            .select('*')
+            .eq('sala', salaActual)
+            .order('creado_en', { ascending: true });
+
+        if (error) return;
+
+        messagesBox.innerHTML = ''; 
+        data.forEach(msg => {
+            const div = document.createElement('div');
+            const miNombre = usernameInput.value.trim() || "user";
+            
+            div.className = msg.remitente === miNombre ? "line me" : "line other";
+            
+            const d = new Date(msg.creado_en);
+            const timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+            
+            div.innerHTML = `<span class="timestamp">[${timeStr}]</span><span class="user-tag">${msg.remitente}@terminal:~#</span> ${msg.contenido}`;
+            messagesBox.appendChild(div);
+        });
+        messagesBox.scrollTop = messagesBox.scrollHeight; 
+    }
+
+    async function enviarMensaje() {
+        const remitente = usernameInput.value.trim() || "user";
+        const contenido = messageInput.value.trim();
+        if (contenido === '') return;
+
+        const { error } = await supabaseClient
+            .from('mensajes')
+            .insert([{ remitente: remitente, contenido: contenido, sala: salaActual }]);
+
+        if (!error) {
+            messageInput.value = ''; 
+            cargarMensajes(); 
+        }
+    }
+</script>
+
+</body>
+</html>
