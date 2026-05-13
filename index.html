@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal Console</title>
-    <!-- ENLACE DE CONEXIÓN CORREGIDO: Activa la librería oficial de Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Consola de Terminal</title>
+    <!-- Enlace oficial completo para activar Supabase desde internet -->
+    <script src="jsdelivr.net"></script>
     <style>
         * { box-sizing: border-box; font-family: 'Consolas', 'Courier New', monospace; }
         body { background-color: #0a0a0a; color: #00ff66; margin: 0; padding: 20px; height: 100vh; display: flex; justify-content: center; align-items: center; }
@@ -147,7 +147,7 @@
     <h2>Creador: Պ¥ՏԵӗԄұՄ§ OFC</h2>
     <p>Introduce tu clave de acceso para abrir el canal de comunicación:</p>
     <div class="password-container">
-        <input type="password" id="accessPassword" placeholder="Password..." style="color: #00ff66 !important; background: #000000 !important;" onkeypress="if(event.key === 'Enter') verificarAcceso()">
+        <input type="password" id="accessPassword" placeholder="Contraseña..." style="color: #00ff66 !important; background: #000000 !important;" onkeypress="if(event.key === 'Enter') verificarAcceso()">
         <button type="button" class="toggle-password" onclick="alternarContraseña()">👁</button>
     </div>
     <button class="btn-access" onclick="verificarAcceso()">ACCEDER</button>
@@ -156,8 +156,8 @@
 <!-- VENTANA DEL CHAT -->
 <div class="chat-window" id="chatScreen">
     <div class="top-bar">
-        <div>Session: <input type="text" id="username" value="user" maxlength="12"></div>
-        <div id="roomLabel" class="room-title">STATUS: IDLE</div>
+        <div>Sesión: <input type="text" id="username" value="usuario" maxlength="12"></div>
+        <div id="roomLabel" class="room-title">ESTADO: INACTIVO</div>
     </div>
     
     <div class="log-screen" id="messagesBox"></div>
@@ -165,13 +165,13 @@
     <div class="bottom-bar">
         <span class="prompt">$&gt;</span>
         <input type="text" id="messageInput" placeholder="Escribe un mensaje..." autocomplete="off" onkeypress="if(event.key === 'Enter') enviarMensaje()">
-        <button onclick="enviarMensaje()">SEND</button>
+        <button onclick="enviarMensaje()">ENVIAR</button>
     </div>
 </div>
 
 <script>
     // 1. CONFIGURACIÓN COMPLETA Y REAL DE CONEXIÓN CON SUPABASE
-    const SUPABASE_URL = "https://utgufzjgvwsyvuxbdebs.supabase.co";
+    const SUPABASE_URL = "supabase.co";
     const SUPABASE_KEY = "sb_publishable_b0lTlpw35XWvlzW2tDg4Lw__YtTL41d";
     
     // 2. CONFIGURACIÓN DE LAS CONTRASENIAS PRIVADAS
@@ -203,15 +203,15 @@
         
         if (pass === CLAVE_NOVIA) {
             salaActual = "chat_novia";
-            document.getElementById('roomLabel').innerText = "ENC_LINK: [PRIVADO_NOVIA]";
+            document.getElementById('roomLabel').innerText = "ENLACE_CIFRADO: [PRIVADO_NOVIA]";
         } else if (pass === CLAVE_AMIGOS) {
             salaActual = "chat_amigos";
-            document.getElementById('roomLabel').innerText = "ENC_LINK: [NET_AMIGOS]";
+            document.getElementById('roomLabel').innerText = "ENLACE_CIFRADO: [RED_AMIGOS]";
         } else if (pass === CLAVE_FAMILIA) {
             salaActual = "chat_familia";
-            document.getElementById('roomLabel').innerText = "ENC_LINK: [SYS_FAMILIA]";
+            document.getElementById('roomLabel').innerText = "ENLACE_CIFRADO: [SISTEMA_FAMILIA]";
         } else {
-            alert("ACCESS DENIED.");
+            alert("ACCESO DENEGADO.");
             document.getElementById('accessPassword').value = '';
             return;
         }
@@ -235,7 +235,7 @@
         messagesBox.innerHTML = ''; 
         data.forEach(msg => {
             const div = document.createElement('div');
-            const miNombre = usernameInput.value.trim() || "user";
+            const miNombre = usernameInput.value.trim() || "usuario";
             
             div.className = msg.remitente === miNombre ? "line me" : "line other";
             
@@ -249,7 +249,7 @@
     }
 
     async function enviarMensaje() {
-        const remitente = usernameInput.value.trim() || "user";
+        const remitente = usernameInput.value.trim() || "usuario";
         const contenido = messageInput.value.trim();
         if (contenido === '') return;
 
