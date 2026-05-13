@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terminal Console</title>
-    <!-- Enlace oficial y correcto para cargar Supabase en la página web -->
-    <script src="jsdelivr.net"></script>
+    <!-- SOLUCIÓN: Enlace oficial completo para activar Supabase desde internet -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { box-sizing: border-box; font-family: 'Consolas', 'Courier New', monospace; }
         body { background-color: #0a0a0a; color: #00ff66; margin: 0; padding: 20px; height: 100vh; display: flex; justify-content: center; align-items: center; }
@@ -22,7 +22,6 @@
         .login-box h2 { color: #00ff66; font-size: 18px; margin: 0 0 15px 0; font-weight: normal; letter-spacing: 1px; }
         .login-box p { font-size: 13px; color: #777; margin-bottom: 20px; line-height: 1.4; }
         
-        /* CONTENEDOR NUEVO PARA EL INPUT Y EL OJITO */
         .password-container {
             position: relative;
             width: 100%;
@@ -35,13 +34,12 @@
             border: 1px solid #333; 
             color: #00ff66 !important; 
             padding: 10px; 
-            padding-right: 40px; /* Espacio para que el texto no se tape con el ojo */
+            padding-right: 40px; 
             outline: none;
             font-size: 14px;
         }
         .login-box input:focus { border-color: #00ff66; }
         
-        /* ESTILO DEL BOTÓN DEL OJITO */
         .toggle-password {
             position: absolute;
             right: 10px;
@@ -53,9 +51,7 @@
             padding: 0;
             outline: none;
         }
-        .toggle-password:hover {
-            color: #fff;
-        }
+        .toggle-password:hover { color: #fff; }
 
         .login-box .btn-access { 
             margin-top: 15px;
@@ -152,7 +148,6 @@
     <p>Introduce tu clave de acceso para abrir el canal de comunicación:</p>
     <div class="password-container">
         <input type="password" id="accessPassword" placeholder="Password..." style="color: #00ff66 !important; background: #000000 !important;" onkeypress="if(event.key === 'Enter') verificarAcceso()">
-        <!-- Botón del ojo interactivo -->
         <button type="button" class="toggle-password" onclick="alternarContraseña()">👁</button>
     </div>
     <button class="btn-access" onclick="verificarAcceso()">ACCEDER</button>
@@ -175,11 +170,10 @@
 </div>
 
 <script>
-    // 1. CONFIGURACIÓN DE CONEXIÓN CON TU SUPABASE
+    // Configuración de conexión vinculada a tu base de datos activa
     const SUPABASE_URL = "https://utgufzjgvwsyvuxbdebs.supabase.co";
     const SUPABASE_KEY = "sb_publishable_b0lTlpw35XWvlzW2tDg4Lw__YtTL41d";
     
-    // 2. CONFIGURACIÓN DE LAS CONTRASENIAS PRIVADAS
     const CLAVE_NOVIA = "miamor123";
     const CLAVE_AMIGOS = "amigos123";
     const CLAVE_FAMILIA = "familia123";
@@ -191,16 +185,15 @@
     
     let salaActual = ""; 
 
-    // Función para mostrar u ocultar el texto de la contraseña
     function alternarContraseña() {
         const passwordInput = document.getElementById('accessPassword');
         const toggleButton = document.querySelector('.toggle-password');
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
-            toggleButton.innerText = '❌'; // Icono cuando se está mostrando la clave
+            toggleButton.innerText = '❌'; 
         } else {
             passwordInput.type = 'password';
-            toggleButton.innerText = '👁'; // Icono cuando está oculta
+            toggleButton.innerText = '👁'; 
         }
     }
 
