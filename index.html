@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terminal Console</title>
-    <!-- ENLACE DE CONEXION REPARADO: Carga la libreria oficial completa de Supabase sin fallas -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- LIBRERÍA OFICIAL DE SUPABASE ACTUALIZADA -->
+    <script src="jsdelivr.net"></script>
     <style>
         * { box-sizing: border-box; font-family: 'Consolas', 'Courier New', monospace; }
         body { background-color: #0a0a0a; color: #00ff66; margin: 0; padding: 20px; height: 100vh; display: flex; justify-content: center; align-items: center; }
@@ -170,11 +170,11 @@
 </div>
 
 <script>
-    // 1. CONFIGURACION DE CONEXION CON SUPABASE
-    const SUPABASE_URL = "https://utgufzjgvwsyvuxbdebs.supabase.co";
+    // 1. CONFIGURACIÓN DE CONEXIÓN REAL CON SUPABASE
+    const SUPABASE_URL = "supabase.co";
     const SUPABASE_KEY = "sb_publishable_b0lTlpw35XWvlzW2tDg4Lw__YtTL41d";
     
-    // 2. CONFIGURACION DE LAS CONTRASENIAS PRIVADAS
+    // 2. CONFIGURACIÓN DE LAS CONTRASENIAS PRIVADAS
     const CLAVE_NOVIA = "miamor123";
     const CLAVE_AMIGOS = "amigos123";
     const CLAVE_FAMILIA = "familia123";
@@ -198,35 +198,7 @@
         }
     }
 
-    function verificarAcceso() {
-        async function verificarAcceso() {
-    const pass = document.getElementById('accessPassword').value;
-    
-    if (pass === CLAVE_NOVIA) {
-        salaActual = "chat_novia";
-        document.getElementById('roomLabel').innerText = "ENLACE_CIFRADO: [PRIVADO_NOVIA]";
-    } else if (pass === CLAVE_AMIGOS) {
-        salaActual = "chat_amigos";
-        document.getElementById('roomLabel').innerText = "ENLACE_CIFRADO: [RED_AMIGOS]";
-    } else if (pass === CLAVE_FAMILIA) {
-        salaActual = "chat_familia";
-        document.getElementById('roomLabel').innerText = "ENLACE_CIFRADO: [SISTEMA_FAMILIA]";
-    } else {
-        alert("ACCESO DENEGADO.");
-        document.getElementById('accessPassword').value = '';
-        return;
-    }
-
-    // 🚀 AÑADE ESTA LÍNEA AQUÍ PARA INICIAR SESIÓN ANÓNIMA EN TU PROYECTO
-    await supabaseClient.auth.signInAnonymously();
-
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('chatScreen').style.display = 'flex';
-    
-    cargarMensajes();
-    escucharMensajesEnTiempoReal();
-}
-
+    async function verificarAcceso() {
         const pass = document.getElementById('accessPassword').value;
         
         if (pass === CLAVE_NOVIA) {
@@ -244,12 +216,18 @@
             return;
         }
 
-        // CIERRE CORRECTO DE LA FUNCION Y APERTURA DE PANTALLA
+        // AUTENTICACIÓN ANÓNIMA OBLIGATORIA DE SUPABASE EN 2026
+        try {
+            await supabaseClient.auth.signInAnonymously();
+        } catch (authError) {
+            console.error("Error de autenticación anónima:", authError);
+        }
+
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('chatScreen').style.display = 'flex';
         
         cargarMensajes();
-        escucharMensajesEnTiempoReal(); // Reemplaza al ineficiente setInterval
+        escucharMensajesEnTiempoReal();
     }
 
     async function cargarMensajes() {
@@ -260,7 +238,7 @@
             .order('creado_en', { ascending: true });
 
         if (error) {
-            console.error("Error al cargar:", error);
+            console.error("Error al cargar historial:", error);
             return;
         }
 
@@ -274,19 +252,21 @@
         const contenido = messageInput.value.trim();
         if (contenido === '') return;
 
-        messageInput.value = ''; // Limpieza inmediata para mitigar lag visual
+        messageInput.value = ''; 
 
+        // Inserción en la tabla mensajes
         const { error } = await supabaseClient
             .from('mensajes')
             .insert([{ remitente: remitente, contenido: contenido, sala: salaActual }]);
 
         if (error) {
-            console.error("Error al enviar:", error);
-            alert("No se pudo enviar el mensaje. Revisa las políticas RLS de Supabase.");
+            console.error("Error devuelto por Supabase:", error);
+            // ALERTA DINÁMICA: Te dirá la falla real del servidor
+            alert("Fallo del servidor de base de datos: " + error.message);
         }
     }
 
-    // NUEVA FUNCION: Escucha activa sin consumir recursos en bucle
+    // SISTEMA EN TIEMPO REAL OPTIMIZADO
     function escucharMensajesEnTiempoReal() {
         supabaseClient
             .channel('cambios-consola')
@@ -297,14 +277,15 @@
             .subscribe();
     }
 
-    // NUEVA FUNCION: Centraliza el diseño del mensaje para evitar duplicar código
     function renderizarMensaje(msg) {
         const div = document.createElement('div');
         const miNombre = usernameInput.value.trim() || "user";
         
         div.className = msg.remitente === miNombre ? "line me" : "line other";
         
-        const d = new Date(msg.creado_en);
+        // Manejo adaptivo del campo de tiempo en caso de usar created_at o creado_en
+        const fechaMsg = msg.creado_en || msg.created_at;
+        const d = new Date(fechaMsg);
         const timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
         
         div.innerHTML = `<span class="timestamp">[${timeStr}]</span><span class="user-tag">${msg.remitente}@terminal:~#</span> ${msg.contenido}`;
